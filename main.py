@@ -16,6 +16,10 @@ LINE = "My smart fridge has a camera, Wi-Fi, and an app \u2014 and still can't e
 def main():
     out_dir = os.environ.get("MAKEFUN_OUTPUT_DIR", "/output")
     os.makedirs(out_dir, exist_ok=True)
+    # Self-check gate: refuse to write a line outside 1-200 chars, multiline,
+    # or with leading/trailing whitespace, so a bad edit fails loudly here.
+    if not 1 <= len(LINE) <= 200 or "\n" in LINE or LINE != LINE.strip():
+        raise SystemExit(f"invalid entry line ({len(LINE)} chars)")
     with open(os.path.join(out_dir, "entry.txt"), "w", encoding="utf-8") as f:
         f.write(LINE + "\n")
 
